@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 function ProductListPage() {
@@ -7,11 +7,27 @@ function ProductListPage() {
   const [products, setProducts] = useState([]);
 
   // To fetch the list of products, set up an effect with the `useEffect` hook:
+  async function getProducts() {
+    let products = await fetch('https://fakestoreapi.com/products');
+    let productJson = await products.json();
+    setProducts(productJson)
+  }
 
+  useEffect(() => {
+    getProducts();
+  })
 
   return (
     <div className="ProductListPage">
-      {/* Render list of products here */}
+      {products.map((product) => (
+        <div key={product.id}>
+          <h1>{product.title}</h1>
+          <div>
+            <img src={product.image} />
+          </div>
+        </div>
+      )
+      )}
     </div>
   );
 }
